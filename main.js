@@ -15,10 +15,6 @@ var app = http.createServer(function(request, response) {
         return response.writeHead(404);
     }
 
-    // console.log(queryData);
-    // console.log("q :"+queryData.id);
-    // console.log("title : "+title);
-    // console.log("@@@@@@");
     response.writeHead(200);
     var template = `
                     <!doctype html>
