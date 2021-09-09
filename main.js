@@ -11,8 +11,17 @@ var app = http.createServer(function(request, response) {
     var title = queryData.id;
     
     //console.log(url.parse(_url, true));
+    //console.log(fs.readdirSync('data/'));
+    var files = fs.readdirSync('data/');
+    var fileList = "";
+    for(var i=0; i<files.length; i++) {
+        fileList += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
+    }
+    
+
     if(pathname == "/") {
         fs.readFile(`data/${title}`, 'utf8', (err,data)=>{
+            // queryData length가 0 이라는건 query값이 없다는것 즉 main 페이지이기 때문에 welcome으로함
             if(Object.keys(queryData).length==0) {
                 title = "Welcome";
                 data = "Hello Node.js";
@@ -27,9 +36,7 @@ var app = http.createServer(function(request, response) {
                         <body>
                         <h1><a href="/">WEB</a></h1>
                         <ol>
-                            <li><a href="/?id=HTML">HTML</a></li>
-                            <li><a href="/?id=CSS">CSS</a></li>
-                            <li><a href="/?id=JavaScript">JavaScript</a></li>
+                            ${fileList}
                         </ol>
                         <h2>${title}</h2>
                         <p>
