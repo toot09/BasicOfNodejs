@@ -36,8 +36,8 @@ function getTemplateHTML(title, data) {
     var fileList = "";
     for(var i=0; i<files.length; i++) {
         fileList += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
-    }
-
+    } 
+ 
     return `<!doctype html>
             <html>
             <head>
