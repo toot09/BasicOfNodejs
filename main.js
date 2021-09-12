@@ -30,7 +30,7 @@ var app = http.createServer(function(request, response) {
     }
 });
 
-
+ 
 function getTemplateHTML(title, data) {
     var files = fs.readdirSync('data/');
     var fileList = "";
