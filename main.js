@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
+var qs = require('querystring');
 
 var app = http.createServer(function(request, response) {
     
@@ -27,7 +28,7 @@ var app = http.createServer(function(request, response) {
     } else if(pathname == "/create") {
         title = "WEB - create";
         var template = getTemplateHTML(title, `
-        <form action="http://localhost:3000/process_create" method="post">
+        <form action="http://localhost:3000/create_process" method="post">
             <p>
                 <input type="text" name="title" placeholder="Title">
             </p>
@@ -41,7 +42,20 @@ var app = http.createServer(function(request, response) {
         `);
         response.writeHead(200);
         response.end(template);
-    } else {
+    } else if(pathname == "/create_process") {
+        var body = "";
+        // request는 위 createServer의 arg
+        request.on('data', function(data) {
+            body += data;
+        })
+        request.on('end', function() {
+            var post = qs.parse(body);
+            var title = post.title;
+            var description = post.description;
+        })
+        response.writeHead(200);
+        response.end('success');
+    }else {
         response.writeHead(404);
         response.end('Not found');
     }
