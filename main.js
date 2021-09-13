@@ -24,6 +24,23 @@ var app = http.createServer(function(request, response) {
             response.writeHead(200);
             response.end(template);
         });
+    } else if(pathname == "/create") {
+        title = "WEB - create";
+        var template = getTemplateHTML(title, `
+        <form action="http://localhost:3000/process_create" method="post">
+            <p>
+                <input type="text" name="title" placeholder="Title">
+            </p>
+            <p>
+                <textarea name="description" placeholder="Description"></textarea>
+            </p>
+            <p>
+                <input type="submit">
+            </p>
+        </form>
+        `);
+        response.writeHead(200);
+        response.end(template);
     } else {
         response.writeHead(404);
         response.end('Not found');
@@ -33,10 +50,11 @@ var app = http.createServer(function(request, response) {
  
 function getTemplateHTML(title, data) {
         var files = fs.readdirSync('data/');
-        var fileList = "";
+        var fileList = "<ol>";
         for(var i=0; i<files.length; i++) {
             fileList += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
         }
+        fileList += "</ol>";
 
         return `<!doctype html>
         <html>
@@ -46,9 +64,8 @@ function getTemplateHTML(title, data) {
         </head>
         <body>
         <h1><a href="/">WEB</a></h1>
-        <ol>
-            ${fileList}
-        </ol>
+        ${fileList}
+        <a href="/create">create</a>
         <h2>${title}</h2>
         <p>
         ${data}
