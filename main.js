@@ -32,31 +32,30 @@ var app = http.createServer(function(request, response) {
 
  
 function getTemplateHTML(title, data) {
-    var files = fs.readdirSync('data/');
-    var fileList = "";
-    for(var i=0; i<files.length; i++) {
-        fileList += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
-    } 
- 
-    return `<!doctype html>
-            <html>
-            <head>
-            <title>WEB1 - ${title}</title>
-            <meta charset="utf-8">
-            </head>
-            <body>
-            <h1><a href="/">WEB</a></h1>
-            <ol>
-                ${fileList}
-            </ol>
-            <h2>${title}</h2>
-            <p>
-            ${data}
-            </p>
-            </body>
-            </html>
-            `;
+        var files = fs.readdirSync('data/');
+        var fileList = "";
+        for(var i=0; i<files.length; i++) {
+            fileList += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
+        }
 
+        return `<!doctype html>
+        <html>
+        <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8">
+        </head>
+        <body>
+        <h1><a href="/">WEB</a></h1>
+        <ol>
+            ${fileList}
+        </ol>
+        <h2>${title}</h2>
+        <p>
+        ${data}
+        </p>
+        </body>
+        </html>
+        `;
 }
 
 app.listen(3000);
