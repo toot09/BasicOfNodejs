@@ -68,22 +68,36 @@ var app = http.createServer(function(request, response) {
             response.writeHead(200);
             response.end(template);
         });
-    } else if(pathname == "/delete") {
+    } else if(pathname == "/delete_process") {
         
         // 메인화면 혹은 create화면 에서 왔다면 update 기능 안되어야함.
-        if(title=="Welcome" || title=="WEB - create") return;
+        // if(title=="Welcome" || title=="WEB - create") return;
         
-        fs.unlink(`./data/${title}`, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log(`Delete ${title} file`);
-            // redirect to main(/)
-            response.writeHead(302, {
-                'Location': '/'
+        
+
+        // delete를 get방식으로 하면 위험하니 post로 한다.
+        var body = "";
+        // request는 위 createServer의 arg
+        request.on('data', function(data) {
+            body += data;
+        })
+        request.on('end', function() {
+            var post = qs.parse(body);
+            var title = post.id;
+            
+            fs.unlink(`./data/${title}`, function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+                console.log(`Delete ${title} file`);
+                // redirect to main(/)
+                response.writeHead(302, {
+                    'Location': '/'
+                });
+                response.end();
             });
-            response.end();
-        });
+        })
+        
     } else {
         response.writeHead(404);
         response.end('Not found');
@@ -108,7 +122,12 @@ function getTemplateHTML(title, data) {
         <body>
         <h1><a href="/">WEB</a></h1>
         ${fileList}
-        <a href="/create">create</a> <a href="/update?id=${title}">update</a> <a href="/delete?id=${title}">delete</a>
+        <a href="/create">create</a>
+        <a href="/update?id=${title}">update</a> 
+        <form action="delete_process" method="post">
+            <input type="hidden" name="id" value="${title}">
+            <input type="submit" value="delete">
+        </form>
         <h2>${title}</h2>
         <p>
         ${data}
