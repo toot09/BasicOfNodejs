@@ -27,19 +27,7 @@ var app = http.createServer(function(request, response) {
         });
     } else if(pathname == "/create") {
         title = "WEB - create";
-        var template = getTemplateHTML(title, `
-        <form action="http://localhost:3000/create_process" method="post">
-            <p>
-                <input type="text" name="title" placeholder="Title">
-            </p>
-            <p>
-                <textarea name="description" placeholder="Description"></textarea>
-            </p>
-            <p>
-                <input type="submit">
-            </p>
-        </form>
-        `);
+        var template = getTemplateHTML(title, getModTemplateHTML("", ""));
         response.writeHead(200);
         response.end(template);
     } else if(pathname == "/create_process") {
@@ -65,7 +53,38 @@ var app = http.createServer(function(request, response) {
             });
             response.end();
         })
-    }else {
+    } else if(pathname == "/update") {
+
+        // 메인화면 혹은 create화면 에서 왔다면 update 기능 안되어야함.
+        if(title=="Welcome" || title=="WEB - create") return;
+
+        fs.readFile(`./data/${title}`, 'utf8', (err,data)=>{
+            // queryData length가 0 이라는건 query값이 없다는것 즉 main 페이지이기 때문에 welcome으로함
+            if(Object.keys(queryData).length==0) {
+                title = "Welcome";
+                data = "Hello Node.js";
+            }
+            var template = getTemplateHTML(title, getModTemplateHTML(title, data));
+            response.writeHead(200);
+            response.end(template);
+        });
+    } else if(pathname == "/delete") {
+        
+        // 메인화면 혹은 create화면 에서 왔다면 update 기능 안되어야함.
+        if(title=="Welcome" || title=="WEB - create") return;
+        
+        fs.unlink(`./data/${title}`, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log(`Delete ${title} file`);
+            // redirect to main(/)
+            response.writeHead(302, {
+                'Location': '/'
+            });
+            response.end();
+        });
+    } else {
         response.writeHead(404);
         response.end('Not found');
     }
@@ -89,7 +108,7 @@ function getTemplateHTML(title, data) {
         <body>
         <h1><a href="/">WEB</a></h1>
         ${fileList}
-        <a href="/create">create</a>
+        <a href="/create">create</a> <a href="/update?id=${title}">update</a> <a href="/delete?id=${title}">delete</a>
         <h2>${title}</h2>
         <p>
         ${data}
@@ -98,5 +117,21 @@ function getTemplateHTML(title, data) {
         </html>
         `;
 }
+
+function getModTemplateHTML(title, description) {
+    return `<form action="http://localhost:3000/create_process" method="post">
+            <p>
+                <input type="text" name="title" placeholder="Title" value=${title}>
+            </p>
+            <p>
+                <textarea name="description" placeholder="Description">${description}</textarea>
+            </p>
+            <p>
+                <input type="submit">
+            </p>
+        </form>
+    `;
+}
+
 
 app.listen(3000);
