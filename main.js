@@ -119,12 +119,17 @@ function getTemplateHTML(title, data) {
 }
 
 function getModTemplateHTML(title, description) {
+    
+    // 업데이트 일 때는 title을 hidden 하여 수정하지 못하도록 함
+    var mod = "hidden";
+    if(title.length==0) mod = "text";
+
     return `<form action="http://localhost:3000/create_process" method="post">
             <p>
-                <input type="text" name="title" placeholder="Title" value=${title}>
+                <input type=${mod} name="title" placeholder="Title" value=${title}>
             </p>
             <p>
-                <textarea name="description" placeholder="Description">${description}</textarea>
+                <textarea name="description" placeholder="Description" rows="20" cols="80">${description}</textarea>
             </p>
             <p>
                 <input type="submit">
