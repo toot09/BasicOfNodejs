@@ -52,9 +52,19 @@ var app = http.createServer(function(request, response) {
             var post = qs.parse(body);
             var title = post.title;
             var description = post.description;
+            // file write
+            fs.writeFile(`data/title`, description, function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+                console.log(`Make ${title} file`);
+            });
         })
-        response.writeHead(200);
-        response.end('success');
+        // redirect to main(/)
+        response.writeHead(302, {
+            'Location': '/'
+        });
+        response.end();
     }else {
         response.writeHead(404);
         response.end('Not found');
