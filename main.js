@@ -53,18 +53,18 @@ var app = http.createServer(function(request, response) {
             var title = post.title;
             var description = post.description;
             // file write
-            fs.writeFile(`data/title`, description, function(err) {
+            fs.writeFile(`data/${title}`, description, 'utf8', function(err) {
                 if(err) {
                     return console.log(err);
                 }
                 console.log(`Make ${title} file`);
             });
+            // redirect to main(/)
+            response.writeHead(302, {
+                'Location': `/?id=${title}`
+            });
+            response.end();
         })
-        // redirect to main(/)
-        response.writeHead(302, {
-            'Location': '/'
-        });
-        response.end();
     }else {
         response.writeHead(404);
         response.end('Not found');
