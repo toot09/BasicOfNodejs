@@ -72,9 +72,6 @@ var app = http.createServer(function(request, response) {
         
         // 메인화면 혹은 create화면 에서 왔다면 update 기능 안되어야함.
         // if(title=="Welcome" || title=="WEB - create") return;
-        
-        
-
         // delete를 get방식으로 하면 위험하니 post로 한다.
         var body = "";
         // request는 위 createServer의 arg
@@ -97,7 +94,7 @@ var app = http.createServer(function(request, response) {
                 response.end();
             });
         })
-        
+
     } else {
         response.writeHead(404);
         response.end('Not found');
